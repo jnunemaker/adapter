@@ -4,6 +4,7 @@ PATH
     adapter (0.5.2)
 
 GEM
+  remote: http://rubygems.org/
   specs:
     activesupport (3.0.3)
     diff-lcs (1.1.3)
