@@ -17,14 +17,14 @@ describe Adapter::Defaults do
     end
 
     it "marshals anything not a string or symbol" do
-      mod.key_for({'testing' => 'this'}).should == %Q(\004\b{\006\"\ftesting\"\tthis)
+      mod.key_for({'testing' => 'this'}).should == Marshal.dump({'testing' => 'this'})
     end
   end
 
   describe "#encode" do
     it "marshals value" do
-      mod.encode(nil).should == "\004\b0"
-      mod.encode({'testing' => 'this'}).should == %Q(\004\b{\006\"\ftesting\"\tthis)
+      mod.encode(nil).should == Marshal.dump(nil)
+      mod.encode({'testing' => 'this'}).should == Marshal.dump({'testing' => 'this'})
     end
   end
 
