@@ -50,6 +50,7 @@ Note: You can also optionally provide a lock method. [Read More](https://github.
 
 ## Adapter Power User Guides
 
+* [Wiki Home](https://github.com/jnunemaker/adapter/wiki)
 * [Creating an Adapter](https://github.com/jnunemaker/adapter/wiki/Creating-an-Adapter)
 * [Overriding an Adapter](https://github.com/jnunemaker/adapter/wiki/Overriding-an-Adapter)
 * [Allowing for Options](https://github.com/jnunemaker/adapter/wiki/Allowing-for-Options)
