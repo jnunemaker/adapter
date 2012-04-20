@@ -11,7 +11,7 @@ module Adapter
     end
 
     def delete(key)
-      read(key).tap { client.delete(key_for(key)) }
+      decode(client.delete(key_for(key)))
     end
 
     def clear
