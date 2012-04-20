@@ -1,14 +1,13 @@
 $:.unshift(File.expand_path('../../lib', __FILE__))
 
 require 'pathname'
+require 'rubygems'
+require 'bundler'
 
 require 'adapter/spec/an_adapter'
 require 'adapter/spec/marshal_adapter'
 require 'adapter/spec/types'
 require 'support/module_helpers'
-
-require 'rubygems'
-require 'bundler'
 
 Bundler.require(:default, :test)
 
