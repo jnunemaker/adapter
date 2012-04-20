@@ -1,6 +1,10 @@
 require 'helper'
 
 describe Adapter do
+  before do
+    Adapter.definitions.clear
+  end
+
   describe ".definitions" do
     it "defaults to empty hash" do
       Adapter.instance_variable_set("@definitions", nil)
