@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Adapter by jnunemaker</title>
+    
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Adapter</h1>
+        <p>A simple interface to anything.</p>
+        <p class="view"><a href="https://github.com/jnunemaker/adapter">View the Project on GitHub <small>jnunemaker/adapter</small></a></p>
+        <ul>
+          <li><a href="https://github.com/jnunemaker/adapter/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/jnunemaker/adapter/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/jnunemaker/adapter">Fork On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h2>Install</h2>
+
+<pre><code>gem install adapter
+</code></pre>
+
+<h2>Defining an Adapter</h2>
+
+<p>An adapter requires 4 methods to work: read, write, delete and clear.</p>
+
+<div class="highlight">
+<pre><span class="no">Adapter</span><span class="o">.</span><span class="n">define</span><span class="p">(</span><span class="ss">:memory</span><span class="p">)</span> <span class="k">do</span>
+  <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+    <span class="n">decode</span><span class="p">(</span><span class="n">client</span><span class="o">[</span><span class="n">key_for</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">]</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+    <span class="n">client</span><span class="o">[</span><span class="n">key_for</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">]</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">key_for</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">clear</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">clear</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre>
+</div>
+
+
+<p>Note: in order for things to be most flexible, always wrap key with key_for(key) which will ensure that pretty much anything can be a key. Also, by default encode and decode are included and they Marshal.dump and Marshal.load. Feel free to override these if you prefer JSON serialization or something else.</p>
+
+<p>Once you have defined an adapter, you can get a class of that adapter like this:</p>
+
+<div class="highlight">
+<pre><span class="no">Adapter</span><span class="o">[</span><span class="ss">:memory</span><span class="o">]</span>
+</pre>
+</div>
+
+
+<p>This returns a dynamic class with your adapting methods included and an initialize method that takes a client. This means you can get an instance of the adapter by using new and passing the client (in this instance a boring hash):</p>
+
+<div class="highlight">
+<pre><span class="n">adapter</span> <span class="o">=</span> <span class="no">Adapter</span><span class="o">[</span><span class="ss">:memory</span><span class="o">].</span><span class="n">new</span><span class="p">({})</span> <span class="c1"># sets {} to client</span>
+<span class="n">adapter</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'foo'</span><span class="p">,</span> <span class="s1">'bar'</span><span class="p">)</span>
+<span class="n">adapter</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">'foo'</span><span class="p">)</span> <span class="c1"># 'bar'</span>
+<span class="n">adapter</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s1">'foo'</span><span class="p">)</span>
+<span class="n">adapter</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="s1">'foo'</span><span class="p">,</span> <span class="s1">'bar'</span><span class="p">)</span> <span class="c1"># returns bar and sets foo to bar</span>
+</pre>
+</div>
+
+
+<p><code>get</code> and <code>[]</code> are aliased to read. <code>set</code> and <code>[]=</code> are aliased to write.</p>
+
+<p>Note: You can also optionally provide a lock method. <a href="https://github.com/jnunemaker/adapter/wiki/Locking">Read More</a></p>
+
+<h2>Adapter Power User Guides</h2>
+
+<ul>
+<li><a href="https://github.com/jnunemaker/adapter/wiki">Wiki Home</a></li>
+<li><a href="https://github.com/jnunemaker/adapter/wiki/Creating-an-Adapter">Creating an Adapter</a></li>
+<li><a href="https://github.com/jnunemaker/adapter/wiki/Overriding-an-Adapter">Overriding an Adapter</a></li>
+<li><a href="https://github.com/jnunemaker/adapter/wiki/Allowing-for-Options">Allowing for Options</a></li>
+<li><a href="https://github.com/jnunemaker/adapter/wiki/Adapter-defaults">Adapter defaults</a></li>
+</ul><h2>Mailing List</h2>
+
+<p><a href="https://groups.google.com/forum/#!forum/toystoreadapter">https://groups.google.com/forum/#!forum/toystoreadapter</a></p>
+
+<h2>Contributing</h2>
+
+<ul>
+<li>Fork the project.</li>
+<li>Make your feature addition or bug fix in a topic branch.</li>
+<li>Add tests for it. This is important so we don't break it in a future version unintentionally.</li>
+<li>Commit, do not mess with rakefile, version, or history. (if you want to have your own version, that is fine, but bump version in a commit by itself so we can ignore when we pull)</li>
+<li>Send a pull request.</li>
+</ul>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/jnunemaker">jnunemaker</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
