@@ -1,14 +1,17 @@
 source :rubygems
 gemspec
 
-group(:development) do
+gem 'rake'
+
+group(:guard) do
   gem 'guard'
   gem 'guard-bundler'
   gem 'guard-rspec'
-  gem 'rb-readline'
-  gem 'rb-fsevent'
   gem 'growl'
-  gem 'rake'
+
+end
+
+group(:test) do
   gem 'rspec'
   gem 'log_buddy'
   gem 'timecop'

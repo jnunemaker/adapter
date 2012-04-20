@@ -21,8 +21,6 @@ GEM
     i18n (0.5.0)
     log_buddy (0.5.0)
     rake (0.9.2)
-    rb-fsevent (0.4.3.1)
-    rb-readline (0.4.2)
     rspec (2.5.0)
       rspec-core (~> 2.5.0)
       rspec-expectations (~> 2.5.0)
@@ -47,7 +45,5 @@ DEPENDENCIES
   i18n
   log_buddy
   rake
-  rb-fsevent
-  rb-readline
   rspec
   timecop

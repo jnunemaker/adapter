@@ -3,7 +3,7 @@ $:.unshift(File.expand_path('../../lib', __FILE__))
 require 'rubygems'
 require 'bundler'
 
-Bundler.require(:default, :development)
+Bundler.require(:default, :test)
 
 require 'pathname'
 require 'logger'
