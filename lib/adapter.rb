@@ -6,6 +6,7 @@ module Adapter
   extend Asserts
   include Defaults
 
+  # Stores the definitions for each adapter by name
   def self.definitions
     @definitions ||= {}
   end
@@ -20,6 +21,7 @@ module Adapter
     definitions[name.to_sym] = definition_module
   end
 
+  # Memoizes adapter instances based on their definitions
   def self.adapters
     @adapters ||= {}
   end
