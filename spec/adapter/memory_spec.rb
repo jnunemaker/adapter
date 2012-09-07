@@ -3,6 +3,7 @@ require 'adapter/memory'
 
 describe "Memory adapter" do
   before do
+    Adapter.define(:memory, Adapter::Memory)
     @client = {}
     @adapter = Adapter[:memory].new(@client)
     @adapter.clear
