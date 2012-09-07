@@ -3,6 +3,12 @@ require 'helper'
 describe Adapter do
   before do
     Adapter.definitions.clear
+    Adapter.adapters.clear
+  end
+
+  after do
+    Adapter.definitions.clear
+    Adapter.adapters.clear
   end
 
   describe ".definitions" do
