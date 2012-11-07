@@ -31,6 +31,17 @@ shared_examples_for "an adapter" do
     end
   end
 
+  describe "#get" do
+    it "returns nil if key not available" do
+      adapter.get(key).should be_nil
+    end
+
+    it "returns value if key available" do
+      adapter.write(key, attributes)
+      adapter.get(key).should eq(attributes)
+    end
+  end
+
   describe "#[]" do
     it "returns nil if key not available" do
       adapter[key].should be_nil
@@ -115,6 +126,20 @@ shared_examples_for "an adapter" do
   describe "#write" do
     it "sets key to value" do
       adapter.write(key, attributes)
+      adapter.read(key).should eq(attributes)
+    end
+  end
+
+  describe "#set" do
+    it "sets key to value" do
+      adapter.set(key, attributes)
+      adapter.read(key).should eq(attributes)
+    end
+  end
+
+  describe "#[]=" do
+    it "sets key to value" do
+      adapter[key] = attributes
       adapter.read(key).should eq(attributes)
     end
   end
