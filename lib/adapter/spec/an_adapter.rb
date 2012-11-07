@@ -8,15 +8,15 @@ shared_examples_for "an adapter" do
 
   let(:attributes) {
     {
-      :one   => 'one',
-      :three => 'three',
+      'one'   => 'one',
+      'three' => 'three',
     }
   }
 
   let(:attributes2) {
     {
-      :two  => 'two',
-      :four => 'four',
+      'two'  => 'two',
+      'four' => 'four',
     }
   }
 
