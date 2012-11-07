@@ -49,6 +49,8 @@ module Adapter
         alias []  read
         alias []= write
 
+        alias_method :get_multiple, :read_multiple
+
         def eql?(other)
           self.class.eql?(other.class) && client == other.client
         end
