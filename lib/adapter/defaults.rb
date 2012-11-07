@@ -12,21 +12,15 @@ module Adapter
     end
 
     def key_for(key)
-      if key.is_a?(String)
-        key
-      elsif key.is_a?(Symbol)
-        key.to_s
-      else
-        Marshal.dump(key)
-      end
+      key
     end
 
     def encode(value)
-      Marshal.dump(value)
+      value
     end
 
     def decode(value)
-      value && Marshal.load(value)
+      value
     end
   end
 end

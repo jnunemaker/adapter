@@ -8,33 +8,26 @@ describe Adapter::Defaults do
   end
 
   describe "#key_for" do
-    it "returns value for string" do
-      mod.key_for('foo').should == 'foo'
-    end
-
-    it "returns string for symbol" do
-      mod.key_for(:foo).should == 'foo'
-    end
-
-    it "marshals anything not a string or symbol" do
-      mod.key_for({'testing' => 'this'}).should == Marshal.dump({'testing' => 'this'})
+    it "returns whatever is passed to it" do
+      [nil, 'foo', :foo, {:foo => 'bar'}].each do |key|
+        mod.key_for(key).should be(key)
+      end
     end
   end
 
   describe "#encode" do
-    it "marshals value" do
-      mod.encode(nil).should == Marshal.dump(nil)
-      mod.encode({'testing' => 'this'}).should == Marshal.dump({'testing' => 'this'})
+    it "returns whatever is passed to it" do
+      [nil, 'foo', :foo, {:foo => 'bar'}].each do |value|
+        mod.encode(value).should be(value)
+      end
     end
   end
 
   describe "#decode" do
-    it "returns nil if nil" do
-      mod.decode(nil).should be_nil
-    end
-
-    it "returns marshal load if not nil" do
-      mod.decode(%Q(\004\b{\006\"\ftesting\"\tthis)).should == {'testing' => 'this'}
+    it "returns whatever is passed to it" do
+      [nil, 'foo', :foo, {:foo => 'bar'}].each do |value|
+        mod.decode(value).should be(value)
+      end
     end
   end
 end

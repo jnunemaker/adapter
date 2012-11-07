@@ -114,11 +114,11 @@ describe Adapter do
     before do
       Adapter.define(:memory_json, valid_module) do
         def encode(value)
-          value
+          'encoded'
         end
 
         def decode(value)
-          value
+          'decoded'
         end
       end
     end
@@ -127,13 +127,13 @@ describe Adapter do
     it "encodes correctly" do
       hash = {'foo' => 'bar'}
       adapter.write('foo', hash)
-      adapter.client['foo'].should == hash
+      adapter.client['foo'].should == 'encoded'
     end
 
     it "decodes correctly" do
       hash = {'foo' => 'bar'}
       adapter.client['foo'] = hash
-      adapter.read('foo').should == hash
+      adapter.read('foo').should == 'decoded'
     end
   end
 

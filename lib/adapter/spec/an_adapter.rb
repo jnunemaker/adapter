@@ -3,118 +3,117 @@ shared_examples_for "an adapter" do
     adapter.client.should == client
   end
 
-  Adapter::Spec::Types.each do |type, (key, key2)|
-    it "reads from keys that are #{type}s like a Hash" do
-      adapter[key].should == nil
+  let(:key)  { 'key' }
+  let(:key2) { 'key2' }
+
+  let(:attributes) {
+    {
+      :one => 'one',
+    }
+  }
+
+  let(:attributes2) {
+    {
+      :two => 'two',
+    }
+  }
+
+  describe "#read" do
+    it "returns nil if key not available" do
+      adapter.read(key).should be_nil
     end
 
-    it "writes String values to keys that are #{type}s like a Hash" do
-      adapter[key] = "value"
-      adapter[key].should == "value"
+    it "returns value if key available" do
+      adapter.write(key, attributes)
+      adapter.read(key).should eq(attributes)
+    end
+  end
+
+  describe "#[]" do
+    it "returns nil if key not available" do
+      adapter[key].should be_nil
     end
 
-    it "guarantees that a different String value is retrieved from the #{type} key" do
-      value = "value"
-      adapter[key] = value
-      adapter[key].should_not be_equal(value)
+    it "returns value if key available" do
+      adapter.write(key, attributes)
+      adapter[key].should eq(attributes)
     end
+  end
 
-    it "guarantees that a different Object value is retrieved from the #{type} key" do
-      value = {:foo => :bar}
-      adapter[key] = value
-      adapter[key].should_not be_equal(:foo => :bar)
-    end
-
-    it "returns false from key? if a #{type} key is not available" do
-      adapter.key?(key).should be_false
-    end
-
-    it "returns true from key? if a #{type} key is available" do
-      adapter[key] = "value"
+  describe "#key?" do
+    it "returns true if key available" do
+      adapter.write(key, attributes)
       adapter.key?(key).should be_true
     end
 
-    it "removes and return an element with a #{type} key from the backing store via delete if it exists" do
-      adapter[key] = "value"
-      adapter.delete(key).should == "value"
+    it "returns false if key not available" do
+      adapter.key?(key).should be_false
+    end
+  end
+
+  describe "#fetch" do
+    context "with key not stored" do
+      context "with default value" do
+        it "returns default value" do
+          adapter.fetch(key, {}).should eq({})
+        end
+      end
+
+      context "with default block" do
+        it "returns value of yielded block" do
+          adapter.fetch(key) { |k| {} }.should eq({})
+        end
+      end
+    end
+
+    context "with key that is stored" do
+      context "with default value" do
+        it "returns key value instead of default" do
+          adapter.write(key, attributes2)
+          adapter.fetch(key, attributes).should eq(attributes2)
+        end
+      end
+
+      context "with default block" do
+        it "does not run the block" do
+          adapter.write(key, attributes)
+          unaltered = 'unaltered'
+          adapter.fetch(key) { unaltered = 'altered' }
+          unaltered.should eq('unaltered')
+        end
+      end
+    end
+  end
+
+  describe "#write" do
+    it "sets key to value" do
+      adapter.write(key, attributes)
+      adapter.read(key).should eq(attributes)
+    end
+  end
+
+  describe "#delete" do
+    it "removes stored key from store and returns value" do
+      adapter.write(key, attributes)
+      adapter.delete(key).should eq(attributes)
       adapter.key?(key).should be_false
     end
 
-    it "returns nil from delete if an element for a #{type} key does not exist" do
+    it "returns nil when key not stored" do
       adapter.delete(key).should be_nil
     end
+  end
 
-    it "removes all #{type} keys from the store with clear" do
-      adapter[key] = "value"
-      adapter[key2] = "value2"
+  describe "#clear" do
+    before do
+      adapter[key] = attributes
+      adapter[key2] = attributes2
       adapter.clear
-      adapter.key?(key).should_not be_true
-      adapter.key?(key2).should_not be_true
     end
 
-    it "fetches a #{type} key with a default value with fetch, if the key is not available" do
-      adapter.fetch(key, "value").should == "value"
+    it "removes all stored keys" do
+      adapter.key?(key).should be_false
+      adapter.key?(key2).should be_false
     end
-
-    it "fetches a #{type} key with a block with fetch, if the key is not available" do
-      adapter.fetch(key) { |k| "value" }.should == "value"
-    end
-
-    it "does not run the block if the #{type} key is available" do
-      adapter[key] = "value"
-      unaltered = "unaltered"
-      adapter.fetch(key) { unaltered = "altered" }
-      unaltered.should == "unaltered"
-    end
-
-    it "fetches a #{type} key with a default value with fetch, if the key is available" do
-      adapter[key] = "value2"
-      adapter.fetch(key, "value").should == "value2"
-    end
-
-    it "writes #{key} values with #write" do
-      adapter.write(key, "value")
-      adapter[key].should == "value"
-    end
-  end
-
-  it "refuses to #[] from keys that cannot be marshalled" do
-    lambda do
-      adapter[Struct.new(:foo).new(:bar)]
-    end.should raise_error(TypeError)
-  end
-
-  it "refuses to fetch from keys that cannot be marshalled" do
-    lambda do
-      adapter.fetch(Struct.new(:foo).new(:bar), true)
-    end.should raise_error(TypeError)
-  end
-
-  it "refuses to #[]= to keys that cannot be marshalled" do
-    lambda do
-      adapter[Struct.new(:foo).new(:bar)] = "value"
-    end.should raise_error(TypeError)
-  end
-
-  it "refuses to store to keys that cannot be marshalled" do
-    lambda do
-      adapter.write Struct.new(:foo).new(:bar), "value"
-    end.should raise_error(TypeError)
-  end
-
-  it "refuses to check for key? if the key cannot be marshalled" do
-    lambda do
-      adapter.key? Struct.new(:foo).new(:bar)
-    end.should raise_error(TypeError)
-  end
-
-  it "refuses to delete a key if the key cannot be marshalled" do
-    lambda do
-      adapter.delete Struct.new(:foo).new(:bar)
-    end.should raise_error(TypeError)
-  end
-
-  it "specifies that it is writable via frozen?" do
-    adapter.should_not be_frozen
   end
 end

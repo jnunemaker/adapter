@@ -5,8 +5,6 @@ require 'rubygems'
 require 'bundler'
 
 require 'adapter/spec/an_adapter'
-require 'adapter/spec/marshal_adapter'
-require 'adapter/spec/types'
 require 'support/module_helpers'
 
 Bundler.require(:default, :test)
