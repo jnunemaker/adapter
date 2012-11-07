@@ -8,13 +8,15 @@ shared_examples_for "an adapter" do
 
   let(:attributes) {
     {
-      :one => 'one',
+      :one   => 'one',
+      :three => 'three',
     }
   }
 
   let(:attributes2) {
     {
-      :two => 'two',
+      :two  => 'two',
+      :four => 'four',
     }
   }
 
@@ -93,14 +95,21 @@ shared_examples_for "an adapter" do
   end
 
   describe "#delete" do
-    it "removes stored key from store and returns value" do
-      adapter.write(key, attributes)
-      adapter.delete(key).should eq(attributes)
-      adapter.key?(key).should be_false
+    context "when key available" do
+      before do
+        adapter.write(key, attributes)
+        @result = adapter.delete(key)
+      end
+
+      it "removes key" do
+        adapter.key?(key).should be_false
+      end
     end
 
-    it "returns nil when key not stored" do
-      adapter.delete(key).should be_nil
+    context "when key not available" do
+      it "does not complain" do
+        adapter.delete(key)
+      end
     end
   end
 
