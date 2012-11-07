@@ -43,11 +43,11 @@ module Adapter
 
         include Adapter.definitions[name.to_sym]
 
-        alias get read
-        alias set write
+        alias_method :get, :read
+        alias_method :set, :write
 
-        alias []  read
-        alias []= write
+        alias_method :[], :read
+        alias_method :[]=, :write
 
         alias_method :get_multiple, :read_multiple
 
