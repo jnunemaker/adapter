@@ -98,7 +98,7 @@ shared_examples_for "an adapter" do
     context "when key available" do
       before do
         adapter.write(key, attributes)
-        @result = adapter.delete(key)
+        adapter.delete(key)
       end
 
       it "removes key" do
