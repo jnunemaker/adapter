@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    adapter (0.6.0)
+    adapter (0.6.1)
 
 GEM
   remote: http://rubygems.org/
