@@ -42,6 +42,31 @@ shared_examples_for "an adapter" do
     end
   end
 
+  describe "#read_multiple" do
+    before do
+      adapter.write(key, attributes)
+      adapter.write(key2, attributes2)
+    end
+
+    it "returns Hash of keys and values" do
+      adapter.read_multiple(key, key2).should eq({
+        key  => attributes,
+        key2 => attributes2,
+      })
+    end
+
+    context "with mix of keys that are and are not available" do
+      it "returns Hash of keys and values where unavailable keys are nil" do
+        adapter.read_multiple(key, key2, 'foo', 'bar').should eq({
+          key => attributes,
+          key2 => attributes2,
+          'foo' => nil,
+          'bar' => nil,
+        })
+      end
+    end
+  end
+
   describe "#key?" do
     it "returns true if key available" do
       adapter.write(key, attributes)

@@ -7,6 +7,12 @@ module Adapter
       end
     end
 
+    def read_multiple(*keys)
+      result = {}
+      keys.each { |key| result[key_for(key)] = read(key) }
+      result
+    end
+
     def key?(key)
       !read(key).nil?
     end
