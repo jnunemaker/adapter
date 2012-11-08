@@ -3,14 +3,15 @@ require 'adapter/defaults'
 require 'adapter/exceptions'
 
 module Adapter
+  extend self
   extend Asserts
 
   # Stores the definitions for each adapter by name
-  def self.definitions
+  def definitions
     @definitions ||= {}
   end
 
-  def self.define(name, mod=nil, &block)
+  def define(name, mod=nil, &block)
     definition_module = Module.new
     definition_module.send(:include, Defaults)
     definition_module.send(:include, mod) unless mod.nil?
@@ -21,17 +22,17 @@ module Adapter
   end
 
   # Memoizes adapter instances based on their definitions
-  def self.adapters
+  def adapters
     @adapters ||= {}
   end
 
-  def self.[](name)
+  def [](name)
     assert_valid_adapter(name)
     adapters[name.to_sym] ||= get_adapter_instance(name)
   end
 
   private
-    def self.get_adapter_instance(name)
+    def get_adapter_instance(name)
       Class.new do
         attr_reader :client, :options
 
