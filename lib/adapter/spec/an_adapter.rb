@@ -6,6 +6,8 @@ shared_examples_for "an adapter" do
   let(:key)  { 'key' }
   let(:key2) { 'key2' }
 
+  let(:unavailable_key)  { 'foo' }
+
   let(:attributes) {
     {
       'one'   => 'one',
@@ -82,7 +84,7 @@ shared_examples_for "an adapter" do
 
     context "with mix of keys that are and are not available" do
       it "returns Hash of keys and attributes where unavailable keys are nil" do
-        result = adapter.read_multiple(key, key2, 'foo', 'bar')
+        result = adapter.read_multiple(key, key2, unavailable_key)
 
         attributes.each do |column, value|
           result[key][column].should eq(value)
@@ -92,8 +94,7 @@ shared_examples_for "an adapter" do
           result[key2][column].should eq(value)
         end
 
-        result['foo'].should be_nil
-        result['bar'].should be_nil
+        result[unavailable_key].should be_nil
       end
     end
   end
@@ -118,7 +119,7 @@ shared_examples_for "an adapter" do
 
     context "with mix of keys that are and are not available" do
       it "returns Hash of keys and attributes where unavailable keys are nil" do
-        result = adapter.get_multiple(key, key2, 'foo', 'bar')
+        result = adapter.get_multiple(key, key2, unavailable_key)
 
         attributes.each do |column, value|
           result[key][column].should eq(value)
@@ -128,8 +129,7 @@ shared_examples_for "an adapter" do
           result[key2][column].should eq(value)
         end
 
-        result['foo'].should be_nil
-        result['bar'].should be_nil
+        result[unavailable_key].should be_nil
       end
     end
   end
