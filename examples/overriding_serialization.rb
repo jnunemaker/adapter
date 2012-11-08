@@ -19,12 +19,12 @@ require 'adapter/memory'
 # Marshal.load/dump. Also, important to note that this does not affect
 # the memory adapter which still uses Marshal.
 Adapter.define(:memory_json, Adapter::Memory) do
-  def encode(value)
-    ActiveSupport::JSON.encode(value)
+  def encode(attributes)
+    ActiveSupport::JSON.encode(attributes)
   end
 
-  def decode(value)
-    ActiveSupport::JSON.decode(value)
+  def decode(attributes)
+    ActiveSupport::JSON.decode(attributes)
   end
 end
 

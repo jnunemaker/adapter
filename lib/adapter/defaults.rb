@@ -1,11 +1,11 @@
 module Adapter
   module Defaults
-    def fetch(key, value=nil)
+    def fetch(key, attributes=nil)
       read(key) || begin
         if block_given?
           yield(key)
         else
-          value
+          attributes
         end
       end
     end
@@ -24,12 +24,12 @@ module Adapter
       key
     end
 
-    def encode(value)
-      value
+    def encode(attributes)
+      attributes
     end
 
-    def decode(value)
-      value
+    def decode(attributes)
+      attributes
     end
   end
 end

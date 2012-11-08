@@ -25,11 +25,11 @@ shared_examples_for "an adapter" do
       adapter.read(key).should be_nil
     end
 
-    it "returns value if key available" do
+    it "returns attributes if key available" do
       adapter.write(key, attributes)
       result = adapter.read(key)
-      attributes.each do |key, value|
-        result[key].should eq(value)
+      attributes.each do |column, value|
+        result[column].should eq(value)
       end
     end
   end
@@ -39,11 +39,11 @@ shared_examples_for "an adapter" do
       adapter.get(key).should be_nil
     end
 
-    it "returns value if key available" do
+    it "returns attributes if key available" do
       adapter.write(key, attributes)
       result = adapter.get(key)
-      attributes.each do |key, value|
-        result[key].should eq(value)
+      attributes.each do |column, value|
+        result[column].should eq(value)
       end
     end
   end
@@ -53,11 +53,11 @@ shared_examples_for "an adapter" do
       adapter[key].should be_nil
     end
 
-    it "returns value if key available" do
+    it "returns attributes if key available" do
       adapter.write(key, attributes)
       result = adapter[key]
-      attributes.each do |key, value|
-        result[key].should eq(value)
+      attributes.each do |column, value|
+        result[column].should eq(value)
       end
     end
   end
@@ -68,7 +68,7 @@ shared_examples_for "an adapter" do
       adapter.write(key2, attributes2)
     end
 
-    it "returns Hash of keys and values" do
+    it "returns Hash of keys and attributes" do
       result = adapter.read_multiple(key, key2)
 
       attributes.each do |column, value|
@@ -81,7 +81,7 @@ shared_examples_for "an adapter" do
     end
 
     context "with mix of keys that are and are not available" do
-      it "returns Hash of keys and values where unavailable keys are nil" do
+      it "returns Hash of keys and attributes where unavailable keys are nil" do
         result = adapter.read_multiple(key, key2, 'foo', 'bar')
 
         attributes.each do |column, value|
@@ -104,7 +104,7 @@ shared_examples_for "an adapter" do
       adapter.write(key2, attributes2)
     end
 
-    it "returns Hash of keys and values" do
+    it "returns Hash of keys and attributes" do
       result = adapter.get_multiple(key, key2)
 
       attributes.each do |column, value|
@@ -117,7 +117,7 @@ shared_examples_for "an adapter" do
     end
 
     context "with mix of keys that are and are not available" do
-      it "returns Hash of keys and values where unavailable keys are nil" do
+      it "returns Hash of keys and attributes where unavailable keys are nil" do
         result = adapter.get_multiple(key, key2, 'foo', 'bar')
 
         attributes.each do |column, value|
@@ -146,9 +146,9 @@ shared_examples_for "an adapter" do
   end
 
   describe "#fetch" do
-    context "with key not stored" do
-      context "with default value" do
-        it "returns default value" do
+    context "with key not available" do
+      context "with default attributes" do
+        it "returns default" do
           adapter.fetch(key, {}).should eq({})
         end
       end
@@ -160,9 +160,9 @@ shared_examples_for "an adapter" do
       end
     end
 
-    context "with key that is stored" do
-      context "with default value" do
-        it "returns key value instead of default" do
+    context "with key that is available" do
+      context "with default attributes" do
+        it "returns result of read instead of default" do
           adapter.write(key, attributes2)
           result = adapter.fetch(key, attributes)
           attributes2.each do |column, value|
@@ -183,7 +183,7 @@ shared_examples_for "an adapter" do
   end
 
   describe "#write" do
-    it "sets key to value" do
+    it "sets key to attributes" do
       adapter.write(key, attributes)
       result = adapter.read(key)
       attributes.each do |column, value|
@@ -193,7 +193,7 @@ shared_examples_for "an adapter" do
   end
 
   describe "#set" do
-    it "sets key to value" do
+    it "sets key to attributes" do
       adapter.set(key, attributes)
       result = adapter.read(key)
       attributes.each do |column, value|
@@ -203,7 +203,7 @@ shared_examples_for "an adapter" do
   end
 
   describe "#[]=" do
-    it "sets key to value" do
+    it "sets key to attributes" do
       adapter[key] = attributes
       result = adapter.read(key)
       attributes.each do |column, value|
@@ -232,7 +232,7 @@ shared_examples_for "an adapter" do
   end
 
   describe "#clear" do
-    it "removes all stored keys" do
+    it "removes all available keys" do
       adapter.write(key, attributes)
       adapter.write(key2, attributes2)
       adapter.key?(key).should be_true

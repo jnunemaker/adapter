@@ -6,8 +6,8 @@ module Adapter
       decode(client[key_for(key)])
     end
 
-    def write(key, value)
-      client[key_for(key)] = encode(value)
+    def write(key, attributes)
+      client[key_for(key)] = encode(attributes)
     end
 
     def delete(key)
