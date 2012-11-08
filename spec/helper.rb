@@ -9,6 +9,6 @@ require 'support/module_helpers'
 
 Bundler.require(:default, :test)
 
-Rspec.configure do |c|
-  c.include(ModuleHelpers)
+RSpec.configure do |config|
+  config.include(ModuleHelpers)
 end
