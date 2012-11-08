@@ -1,11 +1,11 @@
 module Adapter
   module Defaults
-    def fetch(key, attributes=nil)
+    def fetch(key, default_attributes=nil)
       read(key) || begin
         if block_given?
           yield(key)
         else
-          attributes
+          default_attributes
         end
       end
     end
