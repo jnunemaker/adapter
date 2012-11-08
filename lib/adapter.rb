@@ -4,7 +4,6 @@ require 'adapter/exceptions'
 
 module Adapter
   extend Asserts
-  include Defaults
 
   # Stores the definitions for each adapter by name
   def self.definitions
