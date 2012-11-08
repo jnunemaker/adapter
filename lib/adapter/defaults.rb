@@ -1,6 +1,6 @@
 module Adapter
   module Defaults
-    def fetch(key, value=nil, &block)
+    def fetch(key, value=nil)
       read(key) || begin
         value = block_given? ? yield(key) : value
         read(key) || value
