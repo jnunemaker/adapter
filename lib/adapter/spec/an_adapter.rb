@@ -34,33 +34,11 @@ shared_examples_for "an adapter" do
         result[column].should eq(value)
       end
     end
-  end
 
-  describe "#get" do
-    it "returns nil if key not available" do
-      adapter.get(key).should be_nil
-    end
-
-    it "returns attributes if key available" do
-      adapter.write(key, attributes)
-      result = adapter.get(key)
-      attributes.each do |column, value|
-        result[column].should eq(value)
-      end
-    end
-  end
-
-  describe "#[]" do
-    it "returns nil if key not available" do
-      adapter[key].should be_nil
-    end
-
-    it "returns attributes if key available" do
-      adapter.write(key, attributes)
-      result = adapter[key]
-      attributes.each do |column, value|
-        result[column].should eq(value)
-      end
+    it "accepts options" do
+      expect {
+        adapter.read(key, :something => 'else')
+      }.to_not raise_error
     end
   end
 
@@ -71,7 +49,7 @@ shared_examples_for "an adapter" do
     end
 
     it "returns Hash of keys and attributes" do
-      result = adapter.read_multiple(key, key2)
+      result = adapter.read_multiple([key, key2])
 
       attributes.each do |column, value|
         result[key][column].should eq(value)
@@ -84,7 +62,7 @@ shared_examples_for "an adapter" do
 
     context "with mix of keys that are and are not available" do
       it "returns Hash of keys and attributes where unavailable keys are nil" do
-        result = adapter.read_multiple(key, key2, unavailable_key)
+        result = adapter.read_multiple([key, key2, unavailable_key])
 
         attributes.each do |column, value|
           result[key][column].should eq(value)
@@ -97,40 +75,11 @@ shared_examples_for "an adapter" do
         result[unavailable_key].should be_nil
       end
     end
-  end
 
-  describe "#get_multiple" do
-    before do
-      adapter.write(key, attributes)
-      adapter.write(key2, attributes2)
-    end
-
-    it "returns Hash of keys and attributes" do
-      result = adapter.get_multiple(key, key2)
-
-      attributes.each do |column, value|
-        result[key][column].should eq(value)
-      end
-
-      attributes2.each do |column, value|
-        result[key2][column].should eq(value)
-      end
-    end
-
-    context "with mix of keys that are and are not available" do
-      it "returns Hash of keys and attributes where unavailable keys are nil" do
-        result = adapter.get_multiple(key, key2, unavailable_key)
-
-        attributes.each do |column, value|
-          result[key][column].should eq(value)
-        end
-
-        attributes2.each do |column, value|
-          result[key2][column].should eq(value)
-        end
-
-        result[unavailable_key].should be_nil
-      end
+    it "accepts options" do
+      expect {
+        adapter.read_multiple([key], :something => 'else')
+      }.to_not raise_error
     end
   end
 
@@ -142,6 +91,12 @@ shared_examples_for "an adapter" do
 
     it "returns false if key not available" do
       adapter.key?(key).should be_false
+    end
+
+    it "accepts options" do
+      expect {
+        adapter.key?(key, :something => 'else')
+      }.to_not raise_error
     end
   end
 
@@ -180,6 +135,12 @@ shared_examples_for "an adapter" do
         end
       end
     end
+
+    it "accepts options" do
+      expect {
+        adapter.fetch(key, true, :something => 'else')
+      }.to_not raise_error
+    end
   end
 
   describe "#write" do
@@ -190,25 +151,11 @@ shared_examples_for "an adapter" do
         result[column].should eq(value)
       end
     end
-  end
 
-  describe "#set" do
-    it "sets key to attributes" do
-      adapter.set(key, attributes)
-      result = adapter.read(key)
-      attributes.each do |column, value|
-        result[column].should eq(value)
-      end
-    end
-  end
-
-  describe "#[]=" do
-    it "sets key to attributes" do
-      adapter[key] = attributes
-      result = adapter.read(key)
-      attributes.each do |column, value|
-        result[column].should eq(value)
-      end
+    it "accepts options" do
+      expect {
+        adapter.write(key, attributes, :something => 'else')
+      }.to_not raise_error
     end
   end
 
@@ -229,6 +176,12 @@ shared_examples_for "an adapter" do
         adapter.key?(key).should be_false
       end
     end
+
+    it "accepts options" do
+      expect {
+        adapter.delete(key, :something => 'else')
+      }.to_not raise_error
+    end
   end
 
   describe "#clear" do
@@ -240,6 +193,12 @@ shared_examples_for "an adapter" do
       adapter.clear
       adapter.key?(key).should be_false
       adapter.key?(key2).should be_false
+    end
+
+    it "accepts options" do
+      expect {
+        adapter.clear(:something => 'else')
+      }.to_not raise_error
     end
   end
 end

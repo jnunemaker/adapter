@@ -43,14 +43,6 @@ module Adapter
 
         include Adapter.definitions[name.to_sym]
 
-        alias_method :get, :read
-        alias_method :set, :write
-
-        alias_method :[], :read
-        alias_method :[]=, :write
-
-        alias_method :get_multiple, :read_multiple
-
         def eql?(other)
           self.class.eql?(other.class) && client == other.client
         end

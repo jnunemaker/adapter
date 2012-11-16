@@ -8,19 +8,19 @@ An adapter requires 4 methods to work: read, write, delete and clear.
 
 ```ruby
 Adapter.define(:memory) do
-  def read(key)
-    decode(client[key_for(key)])
+  def read(key, options = nil)
+    client[key]
   end
 
-  def write(key, attributes)
-    client[key_for(key)] = encode(attributes)
+  def write(key, attributes, options = nil)
+    client[key] = attributes
   end
 
-  def delete(key)
-    client.delete(key_for(key))
+  def delete(key, options = nil)
+    client.delete(key)
   end
 
-  def clear
+  def clear(options = nil)
     client.clear
   end
 end
@@ -43,8 +43,6 @@ adapter.read('foo') # 'bar'
 adapter.delete('foo')
 adapter.fetch('foo', 'bar') # returns bar and sets foo to bar
 ```
-
-`get` and `[]` are aliased to read. `set` and `[]=` are aliased to write.
 
 Note: You can also optionally provide a lock method. [Read More](https://github.com/jnunemaker/adapter/wiki/Locking)
 

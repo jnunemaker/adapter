@@ -43,9 +43,8 @@ describe Adapter do
           include Adapter.definitions[:memory]
         end.tap do |klass|
           klass.new.respond_to?(:fetch).should be_true
-          klass.new.respond_to?(:key_for, true).should be_true
-          klass.new.respond_to?(:encode, true).should be_true
-          klass.new.respond_to?(:decode, true).should be_true
+          klass.new.respond_to?(:key?).should be_true
+          klass.new.respond_to?(:read_multiple).should be_true
         end
       end
 
@@ -107,33 +106,6 @@ describe Adapter do
           adapter.clear
         end.should raise_error('Not Implemented')
       end
-    end
-  end
-
-  describe "Overriding encode/decode" do
-    before do
-      Adapter.define(:memory_json, valid_module) do
-        def encode(value)
-          'encoded'
-        end
-
-        def decode(value)
-          'decoded'
-        end
-      end
-    end
-    let(:adapter) { Adapter[:memory_json].new({}) }
-
-    it "encodes correctly" do
-      hash = {'foo' => 'bar'}
-      adapter.write('foo', hash)
-      adapter.client['foo'].should == 'encoded'
-    end
-
-    it "decodes correctly" do
-      hash = {'foo' => 'bar'}
-      adapter.client['foo'] = hash
-      adapter.read('foo').should == 'decoded'
     end
   end
 
@@ -255,36 +227,6 @@ describe Adapter do
 
       it "returns false if key is not set" do
         adapter.key?('foo').should be_false
-      end
-    end
-
-    describe "#[]" do
-      it "is aliased to read" do
-        adapter.write('foo', 'bar')
-        adapter['foo'].should == 'bar'
-      end
-    end
-
-    describe "#get" do
-      it "is aliased to read" do
-        adapter.write('foo', 'bar')
-        adapter.get('foo').should == 'bar'
-      end
-    end
-
-    describe "#[]=" do
-      it "is aliased to write" do
-        adapter.read('foo').should be_nil
-        adapter['foo'] = 'bar'
-        adapter.read('foo').should == 'bar'
-      end
-    end
-
-    describe "#[]=" do
-      it "is aliased to write" do
-        adapter.read('foo').should be_nil
-        adapter.set('foo', 'bar')
-        adapter.read('foo').should == 'bar'
       end
     end
 

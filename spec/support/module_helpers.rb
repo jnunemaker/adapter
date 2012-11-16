@@ -1,19 +1,19 @@
 module ModuleHelpers
   def valid_module
     Module.new do
-      def read(key)
-        decode(client[key_for(key)])
+      def read(key, options = nil)
+        client[key]
       end
 
-      def write(key, value)
-        client[key_for(key)] = encode(value)
+      def write(key, attributes, options = nil)
+        client[key] = attributes
       end
 
-      def delete(key)
-        client.delete(key_for(key))
+      def delete(key, options = nil)
+        client.delete(key)
       end
 
-      def clear
+      def clear(options = nil)
         client.clear
       end
     end
