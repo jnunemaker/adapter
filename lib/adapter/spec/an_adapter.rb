@@ -86,11 +86,11 @@ shared_examples_for "an adapter" do
   describe "#key?" do
     it "returns true if key available" do
       adapter.write(key, attributes)
-      adapter.key?(key).should be true
+      adapter.key?(key).should be(true)
     end
 
     it "returns false if key not available" do
-      adapter.key?(key).should be false
+      adapter.key?(key).should be(false)
     end
 
     it "accepts options" do
@@ -163,17 +163,17 @@ shared_examples_for "an adapter" do
     context "when key available" do
       it "removes key" do
         adapter.write(key, attributes)
-        adapter.key?(key).should be true
+        adapter.key?(key).should be(true)
         adapter.delete(key)
-        adapter.key?(key).should be false
+        adapter.key?(key).should be(false)
       end
     end
 
     context "when key not available" do
       it "does not complain" do
-        adapter.key?(key).should be false
+        adapter.key?(key).should be(false)
         adapter.delete(key)
-        adapter.key?(key).should be false
+        adapter.key?(key).should be(false)
       end
     end
 
@@ -188,11 +188,11 @@ shared_examples_for "an adapter" do
     it "removes all available keys" do
       adapter.write(key, attributes)
       adapter.write(key2, attributes2)
-      adapter.key?(key).should be true
-      adapter.key?(key2).should be true
+      adapter.key?(key).should be(true)
+      adapter.key?(key2).should be(true)
       adapter.clear
-      adapter.key?(key).should be false
-      adapter.key?(key2).should be false
+      adapter.key?(key).should be(false)
+      adapter.key?(key2).should be(false)
     end
 
     it "accepts options" do
