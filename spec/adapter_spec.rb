@@ -42,9 +42,9 @@ describe Adapter do
         Class.new do
           include Adapter.definitions[:memory]
         end.tap do |klass|
-          klass.new.respond_to?(:fetch).should be_true
-          klass.new.respond_to?(:key?).should be_true
-          klass.new.respond_to?(:read_multiple).should be_true
+          klass.new.respond_to?(:fetch).should be(true)
+          klass.new.respond_to?(:key?).should be(true)
+          klass.new.respond_to?(:read_multiple).should be(true)
         end
       end
 
@@ -222,11 +222,11 @@ describe Adapter do
     describe "#key?" do
       it "returns true if key is set" do
         adapter.write('foo', 'bar')
-        adapter.key?('foo').should be_true
+        adapter.key?('foo').should be(true)
       end
 
       it "returns false if key is not set" do
-        adapter.key?('foo').should be_false
+        adapter.key?('foo').should be(false)
       end
     end
 
