@@ -1,6 +1,6 @@
 shared_examples_for "an adapter" do
   it "can read the client" do
-    adapter.client.should == client
+    expect(adapter.client).to eq(client)
   end
 
   let(:key)  { 'key' }
@@ -24,14 +24,14 @@ shared_examples_for "an adapter" do
 
   describe "#read" do
     it "returns nil if key not available" do
-      adapter.read(key).should be_nil
+      expect(adapter.read(key)).to be_nil
     end
 
     it "returns attributes if key available" do
       adapter.write(key, attributes)
       result = adapter.read(key)
       attributes.each do |column, value|
-        result[column].should eq(value)
+        expect(result[column]).to eq(value)
       end
     end
 
@@ -52,11 +52,11 @@ shared_examples_for "an adapter" do
       result = adapter.read_multiple([key, key2])
 
       attributes.each do |column, value|
-        result[key][column].should eq(value)
+        expect(result[key][column]).to eq(value)
       end
 
       attributes2.each do |column, value|
-        result[key2][column].should eq(value)
+        expect(result[key2][column]).to eq(value)
       end
     end
 
@@ -65,14 +65,14 @@ shared_examples_for "an adapter" do
         result = adapter.read_multiple([key, key2, unavailable_key])
 
         attributes.each do |column, value|
-          result[key][column].should eq(value)
+          expect(result[key][column]).to eq(value)
         end
 
         attributes2.each do |column, value|
-          result[key2][column].should eq(value)
+          expect(result[key2][column]).to eq(value)
         end
 
-        result[unavailable_key].should be_nil
+        expect(result[unavailable_key]).to be_nil
       end
     end
 
@@ -86,11 +86,11 @@ shared_examples_for "an adapter" do
   describe "#key?" do
     it "returns true if key available" do
       adapter.write(key, attributes)
-      adapter.key?(key).should be(true)
+      expect(adapter.key?(key)).to be(true)
     end
 
     it "returns false if key not available" do
-      adapter.key?(key).should be(false)
+      expect(adapter.key?(key)).to be(false)
     end
 
     it "accepts options" do
@@ -104,13 +104,13 @@ shared_examples_for "an adapter" do
     context "with key not available" do
       context "with default attributes" do
         it "returns default" do
-          adapter.fetch(key, {}).should eq({})
+          expect(adapter.fetch(key, {})).to eq({})
         end
       end
 
       context "with default block" do
         it "returns value of yielded block" do
-          adapter.fetch(key) { |k| {} }.should eq({})
+          expect(adapter.fetch(key) { |k| {} }).to eq({})
         end
       end
     end
@@ -121,7 +121,7 @@ shared_examples_for "an adapter" do
           adapter.write(key, attributes2)
           result = adapter.fetch(key, attributes)
           attributes2.each do |column, value|
-            result[column].should eq(value)
+            expect(result[column]).to eq(value)
           end
         end
       end
@@ -131,7 +131,7 @@ shared_examples_for "an adapter" do
           adapter.write(key, attributes)
           unaltered = 'unaltered'
           adapter.fetch(key) { unaltered = 'altered' }
-          unaltered.should eq('unaltered')
+          expect(unaltered).to eq('unaltered')
         end
       end
     end
@@ -148,7 +148,7 @@ shared_examples_for "an adapter" do
       adapter.write(key, attributes)
       result = adapter.read(key)
       attributes.each do |column, value|
-        result[column].should eq(value)
+        expect(result[column]).to eq(value)
       end
     end
 
@@ -163,17 +163,17 @@ shared_examples_for "an adapter" do
     context "when key available" do
       it "removes key" do
         adapter.write(key, attributes)
-        adapter.key?(key).should be(true)
+        expect(adapter.key?(key)).to be(true)
         adapter.delete(key)
-        adapter.key?(key).should be(false)
+        expect(adapter.key?(key)).to be(false)
       end
     end
 
     context "when key not available" do
       it "does not complain" do
-        adapter.key?(key).should be(false)
+        expect(adapter.key?(key)).to be(false)
         adapter.delete(key)
-        adapter.key?(key).should be(false)
+        expect(adapter.key?(key)).to be(false)
       end
     end
 
@@ -188,11 +188,11 @@ shared_examples_for "an adapter" do
     it "removes all available keys" do
       adapter.write(key, attributes)
       adapter.write(key2, attributes2)
-      adapter.key?(key).should be(true)
-      adapter.key?(key2).should be(true)
+      expect(adapter.key?(key)).to be(true)
+      expect(adapter.key?(key2)).to be(true)
       adapter.clear
-      adapter.key?(key).should be(false)
-      adapter.key?(key2).should be(false)
+      expect(adapter.key?(key)).to be(false)
+      expect(adapter.key?(key2)).to be(false)
     end
 
     it "accepts options" do
