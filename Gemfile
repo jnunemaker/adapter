@@ -11,5 +11,5 @@ group(:guard) do
 end
 
 group(:test) do
-  gem 'rspec'
+  gem 'rspec', '~> 3.4.0'
 end
